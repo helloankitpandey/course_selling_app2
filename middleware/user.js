@@ -1,0 +1,41 @@
+// // const { decode } =require("jsonwebtoken");
+
+// const {JWT_SECRET} = require("../config")
+
+
+// function userMiddleware(req, res, next) {
+//     const token = req.headers.authorization;
+//     const words = token.split(" ");
+//     const {JWT_SECRET} = words[1];
+//     const decodedValue = jwt.verify(jwtToken, JWT_SECRET);
+
+//     if(decodedValue.username) {
+//         next();
+//     } else{
+//         res.status(403).json({
+//             msg: "You are not authenticated"
+//         })
+//     }
+// }
+
+// module.exports = userMiddleware;
+
+const { JWT_SECRET } = require("../config");
+const jwt = require("jsonwebtoken");
+
+function userMiddleware(req, res, next){
+    const token = req.headers.authorization;
+    const words = token.split(" ");
+    const jwtToken = words[1];
+    const decodedValue = jwt.verify(jwtToken, JWT_SECRET);
+    if(decodedValue.username){
+        // req.username = decodedValue.username;
+        next();
+    }else{
+        res.statu(411).json({
+            msg: "You are not authenticated"
+        })
+    }
+}
+
+module.exports = userMiddleware;
